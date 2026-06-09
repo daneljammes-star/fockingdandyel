@@ -887,7 +887,7 @@
             pack12: "https://buy.stripe.com/test_4gMfZh2H7bQG66xfEA9R600"
         }
 
-        // Purchase flow - Stripe Checkout via Netlify Function
+        // Purchase flow - Using Stripe Payment Links (stable & reliable)
         function buyBeat(beatId) {
             const beat = beats.find(b => b.id === beatId)
             if (!beat) return
@@ -897,27 +897,20 @@
                 return
             }
 
-            // Call Netlify Function to create Stripe Checkout Session
-            fetch('/.netlify/functions/create-checkout-session', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    beatId: beat.id,
-                    beatTitle: beat.title,
-                    price: beat.price
-                })
-            })
-            .then(res => res.json())
-            .then(data => {
-                if (data.url) {
-                    window.location.href = data.url
-                } else {
-                    alert("Error al crear la sesión de pago.")
-                }
-            })
-            .catch(() => {
-                alert("Error de conexión con el servidor de pagos.")
-            })
+            // Use Payment Link (works reliably)
+            const url = stripeLinks.beat
+
+            if (url && url.startsWith('http')) {
+                const link = document.createElement('a')
+                link.href = url
+                link.target = '_blank'
+                link.rel = 'noopener noreferrer'
+                document.body.appendChild(link)
+                link.click()
+                document.body.removeChild(link)
+            } else {
+                alert("Link de pago no configurado")
+            }
         }
 
         function showSuccessDownloadModal(beatId) {

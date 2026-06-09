@@ -1604,13 +1604,28 @@
 
         // Detecta el parámetro payment=success (siempre muestra lista de selección)
         function checkPaymentSuccessFromStripe() {
-            const urlParams = new URLSearchParams(window.location.search)
+            const urlParams = new URLSearchParams(window.location.search);
             
             if (urlParams.get('payment') === 'success') {
+                // Limpiamos el parámetro inmediatamente
+                window.history.replaceState({}, document.title, window.location.pathname);
+                
                 setTimeout(() => {
-                    window.history.replaceState({}, document.title, window.location.pathname)
-                    showPostPaymentSelectionModal()
-                }, 700)
+                    // Verificamos si ya mostramos la lista en esta sesión de pago
+                    const alreadyShown = sessionStorage.getItem('paymentSelectionShown');
+                    
+                    if (!alreadyShown) {
+                        const availableBeats = beats.filter(b => !purchasedBeats.has(b.id));
+                        
+                        if (availableBeats.length > 0) {
+                            showPostPaymentSelectionModal();
+                            // Marcamos que ya mostramos la lista en esta sesión
+                            sessionStorage.setItem('paymentSelectionShown', 'true');
+                        } else {
+                            showSimplePaymentSuccessModal();
+                        }
+                    }
+                }, 600);
             }
         }
 

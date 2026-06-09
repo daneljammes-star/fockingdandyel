@@ -1,0 +1,1653 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Focking Dandyel • Beats 2026</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- jsPDF for professional PDF generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&amp;family=Space+Grotesk:wght@500;600&amp;display=swap');
+        
+        :root {
+            --gold: #C5A26F;
+            --platinum: #E8E4D9;
+            --dark: #0A0A0A;
+            --accent: #C5A26F;
+        }
+        
+        body {
+            font-family: 'Inter', system_ui, sans-serif;
+            background: #0A0A0A;
+            color: #E8E4D9;
+        }
+
+        .text-platinum {
+            color: #E8E4D9;
+        }
+        
+        .logo-font {
+            font-family: 'Space Grotesk', 'Inter', sans-serif;
+            font-weight: 700;
+            letter-spacing: -0.025em;
+        }
+
+        .beat-card {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+        
+        .beat-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+        }
+
+        .glass {
+            background: rgba(24, 24, 27, 0.85);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .elite-button {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .elite-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px -10px rgb(168 85 247 / 0.4);
+        }
+
+        .premium-bg {
+            background: 
+                radial-gradient(circle at 25% 20%, rgba(197, 162, 111, 0.04) 0%, transparent 50%),
+                radial-gradient(circle at 75% 80%, rgba(232, 228, 217, 0.03) 0%, transparent 50%);
+        }
+
+        .section-header {
+            font-size: 1.75rem;
+            line-height: 1.1;
+            font-weight: 700;
+            letter-spacing: -0.04em;
+        }
+
+        .neon-text {
+            background: linear-gradient(90deg, #a855f7, #ec4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .progress-bar {
+            height: 4px;
+            background: #3f3f46;
+            border-radius: 9999px;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(to right, #a855f7, #ec4899);
+            transition: width 0.1s linear;
+        }
+
+        .playing-glow {
+            box-shadow: 0 0 15px -3px rgb(168 85 247 / 0.4),
+                        0 0 6px -1px rgb(168 85 247 / 0.3);
+        }
+
+        .toast {
+            animation: toast-slide-in 0.3s ease forwards;
+        }
+
+        @keyframes toast-slide-in {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .modal {
+            animation: modal-pop 0.2s ease forwards;
+        }
+
+        .beat-card:hover .beat-cover {
+            transform: scale(1.03);
+        }
+    </style>
+</head>
+<body class="bg-zinc-950 text-zinc-200 premium-bg">
+    <!-- NAVBAR -->
+    <nav class="glass border-b border-[#C5A26F]/20 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6">
+            <div class="flex items-center justify-between h-16">
+                <div>
+                    <div class="font-bold text-2xl tracking-[-0.8px] text-platinum logo-font">DANDYEL</div>
+                    <div class="text-[9px] text-[#C5A26F] -mt-1 font-mono tracking-[2px]">BEATS DE ÉLITE</div>
+                </div>
+
+                <div class="hidden md:flex items-center gap-x-8 text-sm font-medium">
+                    <a href="#catalogo" class="hover:text-white transition-colors">Catálogo</a>
+                    <a href="#por-que" class="hover:text-white transition-colors">Por qué nosotros</a>
+                    <a href="#packs" class="hover:text-white transition-colors">Packs</a>
+                </div>
+
+                <div class="flex items-center gap-x-3">
+                    <button onclick="showCart()" 
+                            class="flex items-center gap-x-2 px-4 py-2 rounded-3xl bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 transition-all active:scale-[0.985]">
+                        <i class="fa-solid fa-shopping-bag text-lg"></i>
+                        <span id="cart-count" 
+                              class="bg-gradient-to-br from-[#C5A26F] to-[#E8D5A3] text-black text-[10px] font-bold font-mono w-5 h-5 flex items-center justify-center rounded-full shadow-[0_0_8px_rgba(197,162,111,0.6)]">0</span>
+                    </button>
+
+                    <button class="md:hidden w-10 h-10 flex items-center justify-center text-xl" onclick="toggleMobileMenu()">
+                        <i class="fa-solid fa-bars"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <div class="max-w-7xl mx-auto px-4 pt-8 pb-12">
+        <div class="flex flex-col items-center text-center">
+            <div class="inline-flex items-center gap-x-2 px-4 py-1.5 rounded-3xl bg-zinc-900 border border-zinc-800 mb-6">
+                <div class="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></div>
+                <span class="text-xs font-semibold tracking-[1.5px] text-emerald-400">NUEVA COLECCIÓN JUNIO 2026</span>
+            </div>
+            
+            <h1 class="text-5xl md:text-6xl font-black tracking-tighter leading-none mb-2">
+                BEATS DE<br>
+                LOS QUE<br>
+                VAN EN SERIO<br>
+                <span class="neon-text text-[#E8E4D9]">€3.99</span>
+            </h1>
+            
+            <p class="max-w-md text-[15px] text-zinc-300 mb-8 leading-snug">
+                Calidad real.<br>
+                Diseñados para ganar.<br>
+                <span class="font-medium">El precio de quien sabe lo que busca.</span>
+            </p>
+
+            <div class="flex flex-col sm:flex-row gap-3 w-full max-w-xs sm:max-w-none">
+                <button onclick="document.getElementById('catalogo').scrollIntoView({ behavior: 'smooth' })" 
+                        class="flex-1 sm:flex-none px-9 py-4 bg-gradient-to-br from-[#C5A26F] via-[#E8D5A3] to-[#C5A26F] text-black font-bold rounded-3xl flex items-center justify-center gap-x-3 active:scale-[0.985] transition-all shadow-[0_4px_20px_rgba(0,0,0,0.3),0_0_25px_rgba(197,162,111,0.5)] hover:shadow-[0_6px_25px_rgba(0,0,0,0.35),0_0_40px_rgba(197,162,111,0.7)] border border-[#E8D5A3]/60">
+                    <span class="text-white tracking-[0.5px]">Explorar el Catálogo</span>
+                    <i class="fa-solid fa-arrow-right-long text-black"></i>
+                </button>
+                
+                <button onclick="document.getElementById('packs').scrollIntoView({ behavior: 'smooth' })" 
+                        class="flex-1 sm:flex-none px-8 py-4 border border-[#C5A26F] hover:bg-[#C5A26F] hover:text-black text-[#C5A26F] font-bold rounded-3xl flex items-center justify-center gap-x-2 transition-all active:scale-[0.985]">
+                    <i class="fa-solid fa-gift mr-1"></i>
+                    <span>Ver Packs Premium</span>
+                </button>
+
+                <button onclick="document.getElementById('quiz-container').scrollIntoView({ behavior: 'smooth' })" 
+                        class="flex-1 sm:flex-none px-8 py-4 border border-[#C5A26F]/60 hover:bg-[#C5A26F]/10 text-[#C5A26F] font-medium rounded-3xl flex items-center justify-center gap-x-2 transition-all active:scale-[0.985]">
+                    <i class="fa-solid fa-magic mr-1"></i>
+                    <span>Encuentra tu beat</span>
+                </button>
+            </div>
+            
+            <div class="flex items-center gap-x-6 mt-8 text-xs">
+                <div class="flex -space-x-2">
+                    <div class="w-6 h-6 rounded-full border border-zinc-800 overflow-hidden"><img src="https://picsum.photos/id/1009/24/24" alt=""></div>
+                    <div class="w-6 h-6 rounded-full border border-zinc-800 overflow-hidden"><img src="https://picsum.photos/id/1011/24/24" alt=""></div>
+                    <div class="w-6 h-6 rounded-full border border-zinc-800 overflow-hidden"><img src="https://picsum.photos/id/1006/24/24" alt=""></div>
+                </div>
+                <div class="text-zinc-400">
+                    <span class="font-semibold text-white">+4,280</span> artistas ya están creando hits
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- STATS BAR -->
+    <div class="border-y border-zinc-800 bg-zinc-900/50">
+        <div class="max-w-7xl mx-auto px-4 py-5">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-y-6 text-center">
+                <div>
+                    <div class="text-3xl font-bold stat-number">1.2m</div>
+                    <div class="text-xs text-zinc-500 tracking-widest">STREAMS ESTE MES</div>
+                </div>
+                <div>
+                    <div class="text-3xl font-bold stat-number">847</div>
+                    <div class="text-xs text-zinc-500 tracking-widest">BEATS VENDIDOS EN 2026</div>
+                </div>
+                <div>
+                    <div class="text-3xl font-bold stat-number">94</div>
+                    <div class="text-xs text-zinc-500 tracking-widest">ARTISTAS EN TOP CHARTS</div>
+                </div>
+                <div>
+                    <div class="text-3xl font-bold flex items-baseline justify-center gap-x-1">
+                        4.98 
+                        <span class="text-emerald-400 text-xl">★</span>
+                    </div>
+                    <div class="text-xs text-zinc-500 tracking-widest">SATISFACCIÓN PROMEDIO</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CATÁLOGO -->
+    <div id="catalogo" class="max-w-7xl mx-auto px-4 pt-10 pb-6">
+        <div class="flex flex-col md:flex-row md:items-end justify-between mb-6 gap-y-3">
+            <div>
+                <div class="uppercase text-xs tracking-[2px] text-purple-400 font-semibold mb-1">CATÁLOGO OFICIAL</div>
+                <h2 class="section-header">Beats disponibles ahora</h2>
+            </div>
+            
+            <div class="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
+                <div class="relative flex-1 md:w-72">
+                    <i class="fa-solid fa-search absolute left-4 top-3.5 text-zinc-500"></i>
+                    <input id="search-input" onkeyup="filterBeats()" type="text" 
+                           placeholder="Buscar beat o género..." 
+                           class="w-full bg-zinc-900 border border-zinc-700 focus:border-purple-500 transition-colors pl-11 py-3 text-sm rounded-3xl placeholder:text-zinc-500 outline-none">
+                </div>
+                
+                <select id="genre-filter" onchange="filterBeats()" 
+                        class="bg-zinc-900 border border-zinc-700 text-sm rounded-3xl px-4 py-3 outline-none focus:border-purple-500 cursor-pointer">
+                    <option value="">Todos los géneros</option>
+                    <option value="Trap">Trap</option>
+                    <option value="Reggaeton">Reggaeton</option>
+                    <option value="Afrobeat">Afrobeat</option>
+                    <option value="Hip Hop">Hip Hop</option>
+                </select>
+                
+                <select id="sort-filter" onchange="filterBeats()" 
+                        class="bg-zinc-900 border border-zinc-700 text-sm rounded-3xl px-4 py-3 outline-none focus:border-purple-500 cursor-pointer">
+                    <option value="popular">Más populares</option>
+                    <option value="price-low">Precio: bajo a alto</option>
+                    <option value="price-high">Precio: alto a bajo</option>
+                    <option value="bpm-low">BPM: bajo a alto</option>
+                </select>
+            </div>
+        </div>
+
+        <div id="beats-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
+            <!-- Populated by JS -->
+        </div>
+        
+        <div class="text-center mt-8">
+            <p class="text-xs text-zinc-500">Mostrando beats de la colección <span class="font-mono text-purple-400">JUNIO 2026</span>. Nuevos drops cada semana.</p>
+        </div>
+    </div>
+
+    <!-- POR QUÉ FOCKING DANDYEL -->
+    <div id="por-que" class="max-w-7xl mx-auto px-4 py-12 border-t border-zinc-800">
+        <div class="text-center mb-10">
+            <div class="uppercase tracking-[2.5px] text-xs text-purple-400 font-semibold mb-2">LA DIFERENCIA</div>
+            <h2 class="section-header">Lo que usan<br>los que ganan</h2>
+        </div>
+        
+        <div class="grid md:grid-cols-3 gap-5">
+            <div class="bg-zinc-900 border border-zinc-800 rounded-3xl p-6">
+                <div class="w-11 h-11 flex items-center justify-center bg-purple-500/10 text-purple-400 rounded-2xl mb-5">
+                    <i class="fa-solid fa-brain text-3xl"></i>
+                </div>
+                <h3 class="font-semibold text-xl mb-2">Diseño que impacta</h3>
+                <p class="text-sm text-zinc-300">Beats hechos para destacar. Psicología en cada nota.</p>
+            </div>
+            <div class="bg-zinc-900 border border-zinc-800 rounded-3xl p-6">
+                <div class="w-11 h-11 flex items-center justify-center bg-purple-500/10 text-purple-400 rounded-2xl mb-5">
+                    <i class="fa-solid fa-lightbulb text-3xl"></i>
+                </div>
+                <h3 class="font-semibold text-xl mb-2">Estrategia incluida</h3>
+                <p class="text-sm text-zinc-300">Referencias, mezcla y dirección visual. No solo audio. Estrategia lista para ganar.</p>
+            </div>
+            <div class="bg-zinc-900 border border-zinc-800 rounded-3xl p-6">
+                <div class="w-11 h-11 flex items-center justify-center bg-purple-500/10 text-purple-400 rounded-2xl mb-5">
+                    <i class="fa-solid fa-file-contract text-3xl"></i>
+                </div>
+                <h3 class="font-semibold text-xl mb-2">Protección total</h3>
+                <p class="text-sm text-zinc-300">Licencia firmada. Derechos completos. Tu música está segura.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- RECOMENDADOR INTELIGENTE -->
+    <div class="max-w-5xl mx-auto px-4 py-16 border-t border-zinc-800">
+        <div class="text-center mb-10">
+            <div class="inline-flex items-center gap-x-2 px-4 py-1.5 rounded-3xl bg-zinc-900 border border-white/10 mb-4">
+                <i class="fa-solid fa-magic text-purple-400"></i>
+                <span class="text-xs font-semibold tracking-[1.5px] text-purple-400">HERRAMIENTA EXCLUSIVA</span>
+            </div>
+            <h2 class="section-header">Encuentra tu beat ideal</h2>
+            <p class="text-zinc-400 mt-3 max-w-md mx-auto">Responde 3 preguntas. Te mostramos los beats que mejor te sirven.</p>
+        </div>
+
+        <div id="quiz-container" class="max-w-2xl mx-auto">
+            <!-- Question 1 -->
+            <div class="quiz-step" id="step-1">
+                <div class="mb-6">
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="text-sm font-medium text-purple-400">PREGUNTA 1 DE 3</span>
+                        <span class="text-xs text-zinc-500">Paso 1/3</span>
+                    </div>
+                    <h3 class="text-2xl font-semibold">¿Qué energía necesitas?</h3>
+                </div>
+                
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <button onclick="selectAnswer(1, 'alta')" class="quiz-option p-5 text-left rounded-3xl border border-zinc-700 hover:border-purple-500 transition-all bg-zinc-900 hover:bg-zinc-800">
+                        <div class="font-semibold">Alta energía / Callejera</div>
+                        <div class="text-xs text-zinc-400 mt-1">Trap agresivo, reggaeton dembow, beats intensos</div>
+                    </button>
+                    <button onclick="selectAnswer(1, 'emocional')" class="quiz-option p-5 text-left rounded-3xl border border-zinc-700 hover:border-purple-500 transition-all bg-zinc-900 hover:bg-zinc-800">
+                        <div class="font-semibold">Emocional / Melódica</div>
+                        <div class="text-xs text-zinc-400 mt-1">Trap melódico, reggaeton romántico, afro suave</div>
+                    </button>
+                    <button onclick="selectAnswer(1, 'oscura')" class="quiz-option p-5 text-left rounded-3xl border border-zinc-700 hover:border-purple-500 transition-all bg-zinc-900 hover:bg-zinc-800">
+                        <div class="font-semibold">Oscura / Intensa</div>
+                        <div class="text-xs text-zinc-400 mt-1">Dark trap, drill, beats con atmósfera pesada</div>
+                    </button>
+                    <button onclick="selectAnswer(1, 'alegre')" class="quiz-option p-5 text-left rounded-3xl border border-zinc-700 hover:border-purple-500 transition-all bg-zinc-900 hover:bg-zinc-800">
+                        <div class="font-semibold">Alegre / Bailable</div>
+                        <div class="text-xs text-zinc-400 mt-1">Reggaeton clásico, afrobeat upbeat, hip hop fresco</div>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Question 2 -->
+            <div class="quiz-step hidden" id="step-2">
+                <div class="mb-6">
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="text-sm font-medium text-purple-400">PREGUNTA 2 DE 3</span>
+                        <span class="text-xs text-zinc-500">Paso 2/3</span>
+                    </div>
+                    <h3 class="text-2xl font-semibold">¿Para qué lo usarás?</h3>
+                </div>
+                
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <button onclick="selectAnswer(2, 'single')" class="quiz-option p-5 text-left rounded-3xl border border-zinc-700 hover:border-purple-500 transition-all bg-zinc-900 hover:bg-zinc-800">
+                        <div class="font-semibold">Single / Canción principal</div>
+                        <div class="text-xs text-zinc-400 mt-1">Necesito algo impactante y profesional</div>
+                    </button>
+                    <button onclick="selectAnswer(2, 'album')" class="quiz-option p-5 text-left rounded-3xl border border-zinc-700 hover:border-purple-500 transition-all bg-zinc-900 hover:bg-zinc-800">
+                        <div class="font-semibold">Álbum o proyecto largo</div>
+                        <div class="text-xs text-zinc-400 mt-1">Busco coherencia y variedad de estilos</div>
+                    </button>
+                    <button onclick="selectAnswer(2, 'social')" class="quiz-option p-5 text-left rounded-3xl border border-zinc-700 hover:border-purple-500 transition-all bg-zinc-900 hover:bg-zinc-800">
+                        <div class="font-semibold">Contenido para redes</div>
+                        <div class="text-xs text-zinc-400 mt-1">Beats virales, cortos y pegajosos</div>
+                    </button>
+                    <button onclick="selectAnswer(2, 'collab')" class="quiz-option p-5 text-left rounded-3xl border border-zinc-700 hover:border-purple-500 transition-all bg-zinc-900 hover:bg-zinc-800">
+                        <div class="font-semibold">Colaboración o featuring</div>
+                        <div class="text-xs text-zinc-400 mt-1">Algo versátil que funcione con otros artistas</div>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Question 3 -->
+            <div class="quiz-step hidden" id="step-3">
+                <div class="mb-6">
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="text-sm font-medium text-purple-400">PREGUNTA 3 DE 3</span>
+                        <span class="text-xs text-zinc-500">Paso 3/3</span>
+                    </div>
+                    <h3 class="text-2xl font-semibold">¿Qué tan rápido prefieres que suene el beat?</h3>
+                </div>
+                
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <button onclick="selectAnswer(3, 'rapido')" class="quiz-option p-5 text-left rounded-3xl border border-zinc-700 hover:border-purple-500 transition-all bg-zinc-900 hover:bg-zinc-800">
+                        <div class="font-semibold">Rápido y agresivo</div>
+                        <div class="text-xs text-zinc-400 mt-1">140+ BPM</div>
+                    </button>
+                    <button onclick="selectAnswer(3, 'medio')" class="quiz-option p-5 text-left rounded-3xl border border-zinc-700 hover:border-purple-500 transition-all bg-zinc-900 hover:bg-zinc-800">
+                        <div class="font-semibold">Medio / Balanceado</div>
+                        <div class="text-xs text-zinc-400 mt-1">95-130 BPM</div>
+                    </button>
+                    <button onclick="selectAnswer(3, 'lento')" class="quiz-option p-5 text-left rounded-3xl border border-zinc-700 hover:border-purple-500 transition-all bg-zinc-900 hover:bg-zinc-800">
+                        <div class="font-semibold">Más lento y atmosférico</div>
+                        <div class="text-xs text-zinc-400 mt-1">80-95 BPM</div>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Results -->
+            <div class="quiz-step hidden" id="results">
+                <div class="text-center mb-8">
+                    <div class="mx-auto w-16 h-16 bg-emerald-500/10 rounded-full flex items-center justify-center mb-4">
+                        <i class="fa-solid fa-check text-emerald-400 text-3xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold">Tus beats recomendados</h3>
+                    <p class="text-zinc-400 mt-2">Los que mejor encajan con lo que buscas.</p>
+                </div>
+                
+                <div id="recommendations" class="space-y-4 mb-8"></div>
+
+                <div class="flex flex-col sm:flex-row gap-3 justify-center">
+                    <button onclick="restartQuiz()" class="px-8 py-3 border border-zinc-700 hover:bg-zinc-800 rounded-3xl text-sm font-medium transition-all">
+                        Hacer el test de nuevo
+                    </button>
+                    <button onclick="document.getElementById('catalogo').scrollIntoView({ behavior: 'smooth' })" class="px-8 py-3 bg-white text-zinc-950 font-semibold rounded-3xl text-sm transition-all">
+                        Ver todo el catálogo
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PACKS -->
+    <div id="packs" class="max-w-7xl mx-auto px-4 pb-16">
+        <div class="bg-zinc-900 border border-zinc-700 rounded-3xl p-8 md:p-10">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-y-6">
+                <div>
+                    <div class="flex items-center gap-x-3 mb-3">
+                        <span class="px-4 py-1 text-xs font-bold tracking-[2px] border border-[#C5A26F] text-[#C5A26F] rounded-3xl">EDICIÓN EXCLUSIVA</span>
+                    </div>
+                    <h3 class="text-3xl font-bold tracking-tight">Packs Premium</h3>
+                    <p class="text-zinc-300 mt-2">Elige tu estilo. Recibe beats de élite. Mientras más compras, más inteligente es tu inversión.</p>
+                </div>
+                
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 w-full md:w-auto">
+                    <div onclick="buyPack(1)" class="cursor-pointer group bg-zinc-950 hover:bg-zinc-900 border border-[#C5A26F]/30 hover:border-[#C5A26F] transition-all rounded-3xl p-5 shadow-lg">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <div class="font-semibold text-lg text-platinum">Pack 5 Beats Premium</div>
+                                <div class="text-xs text-[#C5A26F] font-medium mt-1">5 beats premium • €3.00 c/u</div>
+                            </div>
+                            <div class="text-right">
+                                <div class="line-through text-xs text-zinc-500">€25</div>
+                                <div class="text-2xl font-bold text-[#C5A26F]">€15</div>
+                            </div>
+                        </div>
+                        <div class="mt-5 text-xs px-4 py-2 bg-[#C5A26F]/10 text-[#C5A26F] rounded-2xl inline-block group-hover:bg-[#C5A26F]/20 transition-all border border-[#C5A26F]/30">Adquirir Pack →</div>
+                    </div>
+                    
+                    <div onclick="buyPack(2)" class="cursor-pointer group bg-zinc-950 hover:bg-zinc-900 border border-[#C5A26F]/30 hover:border-[#C5A26F] transition-all rounded-3xl p-5 shadow-lg">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <div class="font-semibold text-lg text-platinum">Pack 8 Beats Premium</div>
+                                <div class="text-xs text-[#C5A26F] font-medium mt-1">8 beats premium • Gran variedad</div>
+                            </div>
+                            <div class="text-right">
+                                <div class="line-through text-xs text-zinc-500">€30</div>
+                                <div class="text-2xl font-bold text-[#C5A26F]">€22</div>
+                            </div>
+                        </div>
+                        <div class="mt-5 text-xs px-4 py-2 bg-[#C5A26F]/10 text-[#C5A26F] rounded-2xl inline-block group-hover:bg-[#C5A26F]/20 transition-all border border-[#C5A26F]/30">Adquirir Pack →</div>
+                    </div>
+                    
+                    <div onclick="buyPack(3)" class="cursor-pointer group bg-zinc-950 hover:bg-zinc-900 border border-[#C5A26F]/30 hover:border-[#C5A26F] transition-all rounded-3xl p-5 shadow-lg">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <div class="font-semibold text-lg text-platinum">Pack 12 Beats Premium</div>
+                                <div class="text-xs text-[#C5A26F] font-medium mt-1">12 beats premium • Máximo valor</div>
+                            </div>
+                            <div class="text-right">
+                                <div class="line-through text-xs text-zinc-500">€60</div>
+                                <div class="text-2xl font-bold text-[#C5A26F]">€29</div>
+                            </div>
+                        </div>
+                        <div class="mt-5 text-xs px-4 py-2 bg-[#C5A26F]/10 text-[#C5A26F] rounded-2xl inline-block group-hover:bg-[#C5A26F]/20 transition-all border border-[#C5A26F]/30">Adquirir Pack →</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="border-t border-zinc-800 bg-zinc-900">
+        <div class="max-w-7xl mx-auto px-4 py-10 text-xs text-zinc-400">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-y-4">
+                <div>© 2026 Focking Dandyel. Todos los derechos reservados.</div>
+                <div class="flex gap-x-5">
+                    <a href="#" class="hover:text-white transition-colors">Términos de licencia</a>
+                    <a href="#" class="hover:text-white transition-colors">Soporte</a>
+                    <a href="#" class="hover:text-white transition-colors">Instagram</a>
+                    <a href="#" class="hover:text-white transition-colors">Discord</a>
+                </div>
+                <div class="font-mono text-[10px]">HECHO CON ❤️ PARA ARTISTAS REALES</div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- MINI PLAYER -->
+    <div id="mini-player" class="hidden fixed bottom-0 left-0 right-0 bg-zinc-900 border-t border-zinc-700 z-[60] shadow-2xl">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex items-center gap-x-4 py-3">
+                <div class="flex items-center gap-x-3 flex-1 min-w-0">
+                    <div id="mini-cover" class="w-11 h-11 rounded-2xl overflow-hidden flex-shrink-0 border border-zinc-700 shadow-inner"></div>
+                    <div class="min-w-0 flex-1">
+                        <div id="mini-title" class="font-semibold text-sm truncate"></div>
+                        <div class="text-[10px] text-purple-400">Focking Dandyel • <span id="mini-genre"></span></div>
+                    </div>
+                </div>
+                
+                <div class="flex items-center gap-x-2">
+                    <button onclick="togglePlayPause()" class="w-9 h-9 flex items-center justify-center text-xl hover:text-purple-400 transition-colors">
+                        <i id="mini-play-icon" class="fa-solid fa-play"></i>
+                    </button>
+                    
+                    <div class="w-28 sm:w-40">
+                        <div class="progress-bar w-full" onclick="seekFromMini(event)">
+                            <div id="mini-progress" class="progress-fill w-0" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="text-[10px] font-mono w-12 text-right text-zinc-400" id="mini-time">0:00</div>
+                </div>
+                
+                <button onclick="closeMiniPlayer()" class="ml-1 text-zinc-400 hover:text-white px-2">
+                    <i class="fa-solid fa-times text-sm"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST CONTAINER -->
+    <div id="toast-container" class="fixed bottom-20 right-4 z-[70] flex flex-col gap-y-2"></div>
+
+    <!-- BUY MODAL -->
+    <div id="buy-modal" onclick="if (event.target.id === 'buy-modal') hideBuyModal()" class="hidden fixed inset-0 bg-black/90 flex items-end md:items-center justify-center z-[80]">
+        <div onclick="event.stopImmediatePropagation()" class="modal bg-zinc-950 w-full md:w-[440px] md:rounded-3xl md:m-4 rounded-t-3xl border border-[#C5A26F]/40 overflow-hidden shadow-2xl">
+            <div class="px-7 pt-7 pb-5 bg-gradient-to-b from-zinc-900 to-zinc-950 border-b border-[#C5A26F]/20">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <div class="flex items-center gap-x-2">
+                            <div class="text-xs text-[#C5A26F] tracking-[2px] font-medium">EDICIÓN EXCLUSIVA</div>
+                        </div>
+                        <div id="modal-beat-title" class="text-2xl font-bold tracking-tight mt-3 text-white"></div>
+                    </div>
+                    <button onclick="hideBuyModal()" class="text-3xl leading-none text-zinc-400 hover:text-white transition-colors">&times;</button>
+                </div>
+            </div>
+            
+            <div class="px-7 pt-5 pb-6">
+                <div class="flex items-baseline justify-between mb-6">
+                    <div>
+                        <div class="text-xs text-[#C5A26F] tracking-widest font-medium">INVERSIÓN</div>
+                        <div id="modal-price" class="text-5xl font-black text-white tabular-nums"></div>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-sm text-emerald-400 font-semibold">Licencia Premium</div>
+                        <div class="text-xs text-zinc-400">Uso comercial ilimitado</div>
+                    </div>
+                </div>
+                
+                <div class="space-y-3 text-sm">
+                    <div class="flex items-start gap-x-3">
+                        <i class="fa-solid fa-check text-[#C5A26F] mt-1"></i>
+                        <div><span class="font-medium">Descarga inmediata</span> de alta calidad (MP3 + WAV)</div>
+                    </div>
+                    <div class="flex items-start gap-x-3">
+                        <i class="fa-solid fa-check text-[#C5A26F] mt-1"></i>
+                        <div><span class="font-medium">Licencia Oficial Exclusiva 2026</span> firmada</div>
+                    </div>
+                    <div class="flex items-start gap-x-3">
+                        <i class="fa-solid fa-check text-[#C5A26F] mt-1"></i>
+                        <div><span class="font-medium">PDF profesional</span> con todos los derechos</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="px-7 pb-7 bg-zinc-950 border-t border-[#C5A26F]/20">
+                <button onclick="confirmPurchase()" 
+                        class="w-full py-4 bg-gradient-to-r from-[#C5A26F] via-[#E8D5A3] to-[#C5A26F] text-black font-bold rounded-3xl flex items-center justify-center gap-x-3 text-base tracking-[1px] active:scale-[0.985] transition-all shadow-[0_0_20px_rgba(197,162,111,0.5)] hover:shadow-[0_0_30px_rgba(197,162,111,0.7)]">
+                    <span>ADQUIRIR ACCESO PREMIUM</span>
+                </button>
+                <div class="text-center text-[10px] text-zinc-500 mt-3 tracking-widest">EDICIÓN EXCLUSIVA • PAGO SEGURO</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SUCCESS + DOWNLOAD MODAL (NEW - Professional) -->
+    <div id="success-download-modal" onclick="if (event.target.id === 'success-download-modal') hideSuccessModal()" 
+         class="hidden fixed inset-0 bg-black/90 flex items-end md:items-center justify-center z-[95]">
+        <div onclick="event.stopImmediatePropagation()" 
+             class="modal bg-zinc-950 w-full md:w-[480px] md:rounded-3xl md:m-4 rounded-t-3xl border border-emerald-500/40 overflow-hidden shadow-2xl">
+            
+            <div class="px-8 pt-8 pb-6 text-center">
+                <div class="mx-auto w-20 h-20 bg-emerald-500 rounded-full flex items-center justify-center mb-6">
+                    <i class="fa-solid fa-check-double text-white text-4xl"></i>
+                </div>
+                
+                <div class="font-bold text-3xl tracking-tight">¡Compra completada!</div>
+                <div id="success-beat-title" class="text-emerald-400 text-xl mt-2 font-semibold"></div>
+                <div class="text-sm text-zinc-400 mt-1">Tu beat + Licencia Oficial ya están listos</div>
+            </div>
+
+            <div class="px-8 pb-8 space-y-3">
+                <!-- Download Instrumental -->
+                <button onclick="downloadInstrumentalFromSuccess()" 
+                        class="w-full py-4 bg-white text-zinc-950 font-bold rounded-3xl flex items-center justify-center gap-x-3 text-lg active:scale-[0.985] transition-all shadow-lg">
+                    <i class="fa-solid fa-download"></i>
+                    <span>DESCARGAR INSTRUMENTAL</span>
+                </button>
+                
+                <!-- Download Professional PDF License -->
+                <button onclick="downloadLicenseFromSuccess()" 
+                        class="w-full py-4 bg-gradient-to-r from-[#C5A26F] via-[#E8D5A3] to-[#C5A26F] text-black font-bold rounded-3xl flex items-center justify-center gap-x-3 text-lg active:scale-[0.985] transition-all shadow-[0_0_20px_rgba(197,162,111,0.5)]">
+                    <i class="fa-solid fa-file-pdf"></i>
+                    <span>DESCARGAR LICENCIA OFICIAL PDF</span>
+                </button>
+                
+                <div class="text-center pt-2">
+                    <button onclick="hideSuccessModal()" 
+                            class="text-sm text-zinc-400 hover:text-white transition-colors">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tailwind
+        function initializeTailwind() {
+            document.documentElement.style.setProperty('--accent', '#a855f7');
+        }
+
+        // Beats Data - June 2026 (all prices €3.99)
+        let beats = [
+            { id: 1, title: "Elevación Espacial", genre: "Reggaeton", bpm: 99, key: "C minor", duration: "2:18", price: 3.99, audioUrl: "https://instrumental.b-cdn.net/Elevacion%20Espacial.wav", cover: "https://picsum.photos/id/1015/600/600", plays: 12480 },
+            { id: 2, title: "En las Nubes", genre: "Reggaeton", bpm: 95, key: "D minor", duration: "1:55", price: 3.99, audioUrl: "https://instrumental.b-cdn.net/En%20las%20Nubes.wav", cover: "https://picsum.photos/id/1009/600/600", plays: 9870 },
+            { id: 3, title: "Sahara Drift", genre: "Afrobeat", bpm: 108, key: "G minor", duration: "3:41", price: 3.99, audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3", cover: "https://picsum.photos/id/160/600/600", plays: 6540 },
+            { id: 4, title: "Concrete Legacy", genre: "Hip Hop", bpm: 86, key: "A# minor", duration: "4:02", price: 3.99, audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3", cover: "https://picsum.photos/id/201/600/600", plays: 15230 },
+            { id: 5, title: "Fuego Lento", genre: "Reggaeton", bpm: 120, key: "D minor", duration: "3:27", price: 3.99, audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3", cover: "https://picsum.photos/id/251/600/600", plays: 7890 },
+            { id: 6, title: "Rhythm Rebellion", genre: "Trap", bpm: 148, key: "E minor", duration: "2:49", price: 3.99, audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-6.mp3", cover: "https://picsum.photos/id/29/600/600", plays: 11340 },
+            { id: 7, title: "Midnight Afro", genre: "Afrobeat", bpm: 102, key: "B minor", duration: "3:55", price: 3.99, audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-7.mp3", cover: "https://picsum.photos/id/180/600/600", plays: 4320 },
+            { id: 8, title: "Street Symphony", genre: "Hip Hop", bpm: 92, key: "C minor", duration: "3:18", price: 3.99, audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3", cover: "https://picsum.photos/id/133/600/600", plays: 6780 },
+            { id: 9, title: "Neon Nights", genre: "Trap", bpm: 145, key: "G# minor", duration: "2:55", price: 3.99, audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3", cover: "https://picsum.photos/id/160/600/600", plays: 9340 },
+            { id: 10, title: "Dembow 24/7", genre: "Reggaeton", bpm: 98, key: "F minor", duration: "3:05", price: 3.99, audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3", cover: "https://picsum.photos/id/201/600/600", plays: 11250 },
+            { id: 11, title: "Lagos Drift", genre: "Afrobeat", bpm: 112, key: "A minor", duration: "3:48", price: 3.99, audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3", cover: "https://picsum.photos/id/251/600/600", plays: 5670 },
+            { id: 12, title: "Concrete Dreams", genre: "Hip Hop", bpm: 88, key: "D# minor", duration: "4:12", price: 3.99, audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3", cover: "https://picsum.photos/id/29/600/600", plays: 8450 },
+            { id: 13, title: "Perreo Extremo", genre: "Reggaeton", bpm: 102, key: "E minor", duration: "2:48", price: 3.99, audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3", cover: "https://picsum.photos/id/180/600/600", plays: 13420 },
+            { id: 14, title: "Midnight Code", genre: "Trap", bpm: 138, key: "B minor", duration: "3:22", price: 3.99, audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-6.mp3", cover: "https://picsum.photos/id/133/600/600", plays: 7120 }
+        ]
+
+        // State
+        let currentAudio = null
+        let currentBeatId = null
+        let isPlaying = false
+        let purchasedBeats = new Set()
+        let purchasedBeatsLink = {}
+        let currentPurchaseId = null
+        let currentSuccessBeatId = null
+
+        function loadPurchased() {
+            const saved = localStorage.getItem('fockingDandyelPurchased')
+            if (saved) purchasedBeats = new Set(JSON.parse(saved))
+            
+            const savedLinks = localStorage.getItem('fockingDandyelPurchasedLinks')
+            if (savedLinks) purchasedBeatsLink = JSON.parse(savedLinks)
+        }
+
+        function savePurchased() {
+            localStorage.setItem('fockingDandyelPurchased', JSON.stringify([...purchasedBeats]))
+            localStorage.setItem('fockingDandyelPurchasedLinks', JSON.stringify(purchasedBeatsLink))
+        }
+
+        function updateCartCount() {
+            document.getElementById('cart-count').textContent = purchasedBeats.size
+        }
+
+        // Render beats WITHOUT images (as requested)
+        function renderBeats(filteredBeats = null) {
+            const container = document.getElementById('beats-grid')
+            container.innerHTML = ''
+            
+            const toRender = filteredBeats || beats
+            
+            toRender.forEach(beat => {
+                const isPurchased = purchasedBeats.has(beat.id)
+                const isPlayingThis = currentBeatId === beat.id && isPlaying
+                
+                const cardHTML = `
+                    <div id="card-${beat.id}" class="beat-card bg-zinc-950 border border-[#C5A26F]/10 rounded-3xl p-5 flex flex-col transition-all duration-300 hover:border-[#C5A26F]/40 ${isPlayingThis ? 'border-purple-500 playing-glow' : ''}">
+                        
+                        <div>
+                            <div class="font-semibold text-[17px] tracking-[-0.3px] text-platinum leading-none">${beat.title}</div>
+                            <div class="text-xs tracking-[1.5px] text-[#C5A26F] mt-1">${beat.genre}</div>
+                            
+                            <div class="flex items-center text-[10px] text-platinum/60 font-mono tracking-[0.5px] mt-3">
+                                <div>${beat.bpm} BPM</div>
+                                <div class="mx-2 text-[#C5A26F]/40">•</div>
+                                <div>${beat.key}</div>
+                                <div class="flex-1"></div>
+                                <div class="text-platinum/50">${beat.duration}</div>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-5">
+                            <div class="text-[10px] tracking-[1.5px] text-platinum/50">INVERSIÓN</div>
+                            <div class="font-bold text-[36px] text-[#C5A26F] tabular-nums tracking-[-1.2px] leading-none">€${beat.price}</div>
+                        </div>
+                        
+                        <div class="grid grid-cols-2 gap-2 mt-auto pt-5">
+                            <!-- Play / Pause Button (Dynamic) -->
+                            <button id="play-btn-${beat.id}" 
+                                    onclick="event.stopImmediatePropagation(); togglePlayForBeat(${beat.id})" 
+                                    class="flex items-center justify-center gap-x-2 py-2.5 text-sm font-medium rounded-2xl transition-all active:scale-[0.985] border border-[#C5A26F]/30 bg-zinc-900 hover:bg-zinc-800 text-platinum">
+                                <i class="fa-solid fa-play text-xs"></i>
+                                <span>Escuchar</span>
+                            </button>
+                            
+                            <!-- Buy Button -->
+                            <button onclick="event.stopImmediatePropagation(); buyBeat(${beat.id})" 
+                                    class="flex items-center justify-center gap-x-2 py-2.5 text-sm font-semibold rounded-2xl transition-all active:scale-[0.985] ${isPurchased ? 'bg-[#8B1E1E] text-white cursor-not-allowed border border-[#C53030]/40' : 'bg-gradient-to-br from-[#C5A26F] to-[#E8D5A3] text-black hover:from-[#E8D5A3] hover:to-[#C5A26F] border border-[#E8D5A3]/50'}">
+                                ${isPurchased ? '<span class="tracking-[1px]">AGOTADO</span>' : '<span>INVERTIR</span>'}
+                            </button>
+                        </div>
+                    </div>
+                `
+                container.innerHTML += cardHTML
+            })
+        }
+
+        function filterBeats() {
+            const search = document.getElementById('search-input').value.toLowerCase().trim()
+            const genre = document.getElementById('genre-filter').value
+            const sort = document.getElementById('sort-filter').value
+            
+            let filtered = beats.filter(b => {
+                const matchSearch = b.title.toLowerCase().includes(search) || b.genre.toLowerCase().includes(search)
+                const matchGenre = !genre || b.genre === genre
+                return matchSearch && matchGenre
+            })
+            
+            if (sort === 'price-low') filtered.sort((a,b) => a.price - b.price)
+            else if (sort === 'price-high') filtered.sort((a,b) => b.price - a.price)
+            else if (sort === 'bpm-low') filtered.sort((a,b) => a.bpm - b.bpm)
+            else filtered.sort((a,b) => b.plays - a.plays)
+            
+            renderBeats(filtered)
+        }
+
+        // Toggle play/pause for specific beat
+        function togglePlayForBeat(beatId) {
+            const beat = beats.find(b => b.id === beatId)
+            if (!beat) return
+
+            // If same track is playing → pause it
+            if (currentBeatId === beatId && isPlaying) {
+                if (currentAudio) currentAudio.pause()
+                isPlaying = false
+                updateAllCardsUI()
+                updateMiniPlayer()
+                return
+            }
+
+            // Stop previous audio
+            if (currentAudio) {
+                currentAudio.pause()
+            }
+
+            currentAudio = new Audio(beat.audioUrl)
+            currentBeatId = beatId
+            isPlaying = true
+
+            currentAudio.addEventListener('timeupdate', () => {
+                const progress = (currentAudio.currentTime / currentAudio.duration) * 100 || 0
+                const miniProgress = document.getElementById('mini-progress')
+                if (miniProgress) miniProgress.style.width = `${progress}%`
+
+                const miniTime = document.getElementById('mini-time')
+                if (miniTime) miniTime.textContent = formatTime(currentAudio.currentTime)
+            })
+
+            currentAudio.addEventListener('ended', () => {
+                isPlaying = false
+                updateAllCardsUI()
+                updateMiniPlayer()
+            })
+
+            currentAudio.play().then(() => {
+                updateAllCardsUI()
+                showMiniPlayer(beat)
+            }).catch(() => {
+                isPlaying = false
+                updateAllCardsUI()
+            })
+        }
+
+        function formatTime(seconds) {
+            if (!seconds || isNaN(seconds)) return '0:00'
+            const min = Math.floor(seconds / 60)
+            const sec = Math.floor(seconds % 60)
+            return `${min}:${sec.toString().padStart(2, '0')}`
+        }
+
+        function togglePlayPause() {
+            if (!currentAudio) return
+            if (isPlaying) {
+                currentAudio.pause()
+                isPlaying = false
+            } else {
+                currentAudio.play()
+                isPlaying = true
+            }
+            updateAllCardsUI()
+            updateMiniPlayer()
+        }
+
+        function seekFromMini(e) {
+            if (!currentAudio) return
+            const rect = e.currentTarget.getBoundingClientRect()
+            const percent = (e.clientX - rect.left) / rect.width
+            currentAudio.currentTime = percent * currentAudio.duration
+        }
+
+        // Update all cards UI (especially play buttons)
+        function updateAllCardsUI() {
+            beats.forEach(beat => {
+                const card = document.getElementById(`card-${beat.id}`)
+                if (!card) return
+
+                const playBtn = document.getElementById(`play-btn-${beat.id}`)
+                if (!playBtn) return
+
+                const isCurrent = currentBeatId === beat.id
+                const playing = isCurrent && isPlaying
+
+                if (playing) {
+                    playBtn.innerHTML = `<i class="fa-solid fa-pause text-xs"></i> <span>Pausar</span>`
+                    playBtn.classList.add('border-purple-500', 'text-purple-400')
+                } else {
+                    playBtn.innerHTML = `<i class="fa-solid fa-play text-xs"></i> <span>Escuchar</span>`
+                    playBtn.classList.remove('border-purple-500', 'text-purple-400')
+                }
+            })
+        }
+
+        function showMiniPlayer(beat) {
+            const mini = document.getElementById('mini-player')
+            mini.classList.remove('hidden')
+            mini.classList.add('flex')
+
+            document.getElementById('mini-cover').innerHTML = `<img src="${beat.cover}" class="w-full h-full object-cover">`
+            document.getElementById('mini-title').textContent = beat.title
+            document.getElementById('mini-genre').textContent = beat.genre
+            updateMiniPlayer()
+        }
+
+        function updateMiniPlayer() {
+            const icon = document.getElementById('mini-play-icon')
+            if (!icon) return
+            icon.classList.toggle('fa-play', !isPlaying)
+            icon.classList.toggle('fa-pause', isPlaying)
+        }
+
+        function closeMiniPlayer() {
+            const mini = document.getElementById('mini-player')
+            mini.classList.add('hidden')
+            mini.classList.remove('flex')
+            if (currentAudio) currentAudio.pause()
+            isPlaying = false
+            currentBeatId = null
+            updateAllCardsUI()
+        }
+
+        // Purchase flow
+        // ==================== STRIPE PAYMENT LINKS (MODO PRUEBA) ====================
+        const stripeLinks = {
+            // Link de prueba (temporal) - funciona para todo
+            beat: "https://buy.stripe.com/test_4gMfZh2H7bQG66xfEA9R600",
+            pack5:  "https://buy.stripe.com/test_4gMfZh2H7bQG66xfEA9R600",
+            pack8:  "https://buy.stripe.com/test_4gMfZh2H7bQG66xfEA9R600",
+            pack12: "https://buy.stripe.com/test_4gMfZh2H7bQG66xfEA9R600"
+        }
+
+        // Purchase flow - Real Stripe
+        function buyBeat(beatId) {
+            const beat = beats.find(b => b.id === beatId)
+            if (!beat) return
+            
+            if (purchasedBeats.has(beatId)) {
+                showPurchasedMessage(beatId)
+                return
+            }
+
+            // Abrir en nueva pestaña de forma más confiable (mejor contra bloqueadores)
+            if (stripeLinks.beat && stripeLinks.beat.startsWith('http')) {
+                const link = document.createElement('a');
+                link.href = stripeLinks.beat;
+                link.target = '_blank';
+                link.rel = 'noopener noreferrer';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            } else {
+                alert("Por favor configura tu link de Stripe en stripeLinks.beat")
+            }
+        }
+
+        function showSuccessDownloadModal(beatId) {
+            const beat = beats.find(b => b.id === beatId)
+            if (!beat) return
+            
+            document.getElementById('success-beat-title').textContent = beat.title
+            document.getElementById('success-download-modal').classList.remove('hidden')
+            document.getElementById('success-download-modal').classList.add('flex')
+        }
+
+        function hideSuccessModal() {
+            const modal = document.getElementById('success-download-modal')
+            modal.classList.remove('flex')
+            modal.classList.add('hidden')
+        }
+
+        function downloadInstrumentalFromSuccess() {
+            if (!currentSuccessBeatId) return
+            const beat = beats.find(b => b.id === currentSuccessBeatId)
+            if (!beat) return
+            
+            const link = document.createElement('a')
+            link.href = beat.audioUrl
+            link.download = `Focking_Dandyel_${beat.title.replace(/\s+/g, '_')}.mp3`
+            document.body.appendChild(link)
+            link.click()
+            document.body.removeChild(link)
+            
+            showMotivationalToast('download', beat.title)
+        }
+
+        // Professional PDF License
+        function generateProfessionalLicensePDF(beat) {
+            const { jsPDF } = window.jspdf
+            const doc = new jsPDF({
+                orientation: 'portrait',
+                unit: 'mm',
+                format: 'a4'
+            })
+            
+            const pageWidth = doc.internal.pageSize.getWidth()
+            const margin = 18
+            const now = new Date()
+            const purchaseDate = now.toLocaleDateString('es-ES', { 
+                day: 'numeric', month: 'long', year: 'numeric',
+                hour: '2-digit', minute: '2-digit'
+            })
+            const licenseId = `FD-2026-${String(beat.id).padStart(3, '0')}-${now.getTime().toString().slice(-6)}`
+            
+            // PAGE 1
+            doc.setFillColor(12, 12, 12)
+            doc.rect(0, 0, pageWidth, 297, 'F')
+            
+            doc.setDrawColor(197, 162, 111)
+            doc.setLineWidth(0.7)
+            doc.line(margin, 16, pageWidth - margin, 16)
+            
+            doc.setTextColor(197, 162, 111)
+            doc.setFontSize(10)
+            doc.setFont('helvetica', 'bold')
+            doc.text('FOCKING DANDYEL', pageWidth / 2, 24, { align: 'center' })
+            
+            doc.setTextColor(200, 200, 200)
+            doc.setFontSize(7.5)
+            doc.setFont('helvetica', 'normal')
+            doc.text('BEATS DE ÉLITE • EST. 2026', pageWidth / 2, 29, { align: 'center' })
+            
+            doc.setTextColor(255, 255, 255)
+            doc.setFontSize(14)
+            doc.setFont('helvetica', 'bold')
+            doc.text('CONTRATO DE LICENCIA NO EXCLUSIVA', pageWidth / 2, 42, { align: 'center' })
+            doc.text('DE USO DE INSTRUMENTAL MUSICAL', pageWidth / 2, 48, { align: 'center' })
+            
+            doc.setTextColor(168, 85, 247)
+            doc.setFontSize(8)
+            doc.text('DOCUMENTO LEGAL OFICIAL • VERSIÓN JUNIO 2026', pageWidth / 2, 54, { align: 'center' })
+            
+            doc.setTextColor(170, 170, 170)
+            doc.setFontSize(8)
+            doc.text(`ID de Licencia: ${licenseId}                                                                 Fecha de emisión: ${purchaseDate}`, margin, 62)
+            
+            doc.setDrawColor(70, 70, 70)
+            doc.setFillColor(20, 20, 20)
+            doc.roundedRect(margin, 68, pageWidth - margin * 2, 26, 2, 2, 'FD')
+            
+            doc.setTextColor(197, 162, 111)
+            doc.setFontSize(8)
+            doc.setFont('helvetica', 'bold')
+            doc.text('INSTRUMENTAL OBJETO DE LA LICENCIA', margin + 6, 75)
+            
+            doc.setTextColor(255, 255, 255)
+            doc.setFontSize(12)
+            doc.text(beat.title, margin + 6, 82)
+            
+            doc.setTextColor(180, 180, 180)
+            doc.setFontSize(8)
+            doc.text(`${beat.genre}  •  ${beat.bpm} BPM  •  Tonalidad: ${beat.key}  •  Duración: ${beat.duration}`, margin + 6, 88)
+            
+            let y = 102
+            const lh = 5.1
+            
+            doc.setTextColor(220, 220, 220)
+            doc.setFontSize(9)
+            doc.setFont('helvetica', 'bold')
+            doc.text('1. PARTES CONTRATANTES', margin, y)
+            y += 5.5
+            doc.setFont('helvetica', 'normal')
+            doc.setFontSize(8)
+            doc.text('Productor: Focking Dandyel, nombre artístico de Daniel Angelo Jaime González', margin, y)
+            y += lh
+            doc.text('(en adelante, el "Productor"). El Productor desarrolla su actividad bajo este nombre artístico.', margin, y)
+            y += lh
+            doc.text('Licenciatario: El adquirente de este documento (en adelante, el "Licenciatario").', margin, y)
+            y += lh
+            doc.text('Ambas partes declaran tener capacidad legal para celebrar el presente contrato.', margin, y)
+            
+            y += 7
+            doc.setFont('helvetica', 'bold')
+            doc.setFontSize(9)
+            doc.text('2. TIPO DE LICENCIA Y ÁMBITO TERRITORIAL', margin, y)
+            y += 5.5
+            doc.setFont('helvetica', 'normal')
+            doc.setFontSize(8)
+            doc.text('Se otorga una Licencia No Exclusiva, Intransferible y Perpetua de ámbito mundial para uso comercial', margin, y)
+            y += lh
+            doc.text('ilimitado. El Licenciatario puede utilizar el beat en cualquier plataforma digital, física o audiovisual', margin, y)
+            y += lh
+            doc.text('en todo el mundo sin restricción geográfica.', margin, y)
+            
+            y += 7
+            doc.setFont('helvetica', 'bold')
+            doc.setFontSize(9)
+            doc.text('3. DERECHOS OTORGADOS', margin, y)
+            y += 5.5
+            doc.setFont('helvetica', 'normal')
+            doc.setFontSize(8)
+            const rights = [
+                'a) Derecho de reproducción, distribución y comunicación pública del Beat en obras derivadas.',
+                'b) Derecho de modificación del Beat (pitch, tempo, adición de elementos sonoros o vocales).',
+                'c) Derecho de sincronización del Beat en contenido audiovisual (vídeos, publicidad, películas, series).',
+                'd) Derecho de monetización ilimitada en plataformas de streaming, descargas y redes sociales.',
+                'e) Derecho de cesión de los derechos sobre la obra final resultante a terceros.'
+            ]
+            rights.forEach(r => {
+                doc.text(r, margin, y)
+                y += lh
+            })
+            
+            y += 6
+            doc.setFont('helvetica', 'bold')
+            doc.setFontSize(9)
+            doc.text('4. RESTRICCIONES Y USOS PROHIBIDOS', margin, y)
+            y += 5.5
+            doc.setFont('helvetica', 'normal')
+            doc.setFontSize(8)
+            const restrictions = [
+                '• No revender, redistribuir, compartir ni sublicenciar el Beat original de forma aislada.',
+                '• No utilizar el Beat en contenido que promueva odio, violencia, discriminación o actividades ilícitas.',
+                '• No eliminar ni alterar la acreditación obligatoria al Productor.',
+                '• No registrar el Beat original como obra propia ni reclamar derechos de autor sobre el mismo.'
+            ]
+            restrictions.forEach(r => {
+                doc.text(r, margin, y)
+                y += lh
+            })
+            
+            doc.setTextColor(90, 90, 90)
+            doc.setFontSize(7)
+            doc.text('Focking Dandyel • Contrato de Licencia Oficial • Página 1 de 2', pageWidth / 2, 288, { align: 'center' })
+            
+            // PAGE 2
+            doc.addPage()
+            
+            doc.setFillColor(12, 12, 12)
+            doc.rect(0, 0, pageWidth, 297, 'F')
+            
+            doc.setDrawColor(197, 162, 111)
+            doc.setLineWidth(0.5)
+            doc.line(margin, 14, pageWidth - margin, 14)
+            
+            doc.setTextColor(197, 162, 111)
+            doc.setFontSize(8)
+            doc.setFont('helvetica', 'bold')
+            doc.text('FOCKING DANDYEL  •  CONTRATO DE LICENCIA OFICIAL 2026', pageWidth / 2, 20, { align: 'center' })
+            
+            doc.setTextColor(140, 140, 140)
+            doc.setFontSize(7)
+            doc.text(`ID: ${licenseId}  •  Instrumental: ${beat.title}`, pageWidth / 2, 25, { align: 'center' })
+            
+            y = 35
+            
+            doc.setTextColor(220, 220, 220)
+            doc.setFontSize(9)
+            doc.setFont('helvetica', 'bold')
+            doc.text('5. OBLIGACIONES DEL LICENCIATARIO', margin, y)
+            y += 5.5
+            doc.setFont('helvetica', 'normal')
+            doc.setFontSize(8)
+            doc.text('El Licenciatario se obliga a:', margin, y)
+            y += lh
+            doc.text('• Incluir de forma clara y visible la mención "Beat producido por Focking Dandyel" en los metadatos,', margin, y)
+            y += lh
+            doc.text('  créditos, descripciones y cualquier material promocional de las obras que utilicen el Beat.', margin, y)
+            y += lh
+            doc.text('• Mantener la integridad del Beat original salvo las modificaciones expresamente permitidas.', margin, y)
+            y += lh
+            doc.text('• No realizar actos que perjudiquen la reputación o derechos del Productor.', margin, y)
+            
+            y += 7
+            doc.setFont('helvetica', 'bold')
+            doc.setFontSize(9)
+            doc.text('6. PROPIEDAD INTELECTUAL', margin, y)
+            y += 5.5
+            doc.setFont('helvetica', 'normal')
+            doc.setFontSize(8)
+            doc.text('El Productor conserva todos los derechos de autor, derechos conexos y cualquier otro derecho de', margin, y)
+            y += lh
+            doc.text('propiedad intelectual sobre el Beat original. La presente licencia no implica transmisión de titularidad', margin, y)
+            y += lh
+            doc.text('ni cesión de derechos sobre el instrumental original, sino únicamente una autorización de uso.', margin, y)
+            
+            y += 7
+            doc.setFont('helvetica', 'bold')
+            doc.setFontSize(9)
+            doc.text('7. DECLARACIONES Y GARANTÍAS', margin, y)
+            y += 5.5
+            doc.setFont('helvetica', 'normal')
+            doc.setFontSize(8)
+            doc.text('El Productor declara que es titular legítimo de los derechos sobre el Beat y que tiene facultad', margin, y)
+            y += lh
+            doc.text('para conceder la presente licencia. El Productor no garantiza que el uso del Beat no infrinja', margin, y)
+            y += lh
+            doc.text('derechos de terceros. El Licenciatario es el único responsable de verificar la originalidad de sus', margin, y)
+            y += lh
+            doc.text('creaciones y de obtener las licencias adicionales que resulten necesarias.', margin, y)
+            
+            y += 7
+            doc.setFont('helvetica', 'bold')
+            doc.setFontSize(9)
+            doc.text('8. LIMITACIÓN DE RESPONSABILIDAD', margin, y)
+            y += 5.5
+            doc.setFont('helvetica', 'normal')
+            doc.setFontSize(8)
+            doc.text('En ningún caso el Productor será responsable por daños indirectos, incidentales, especiales o', margin, y)
+            y += lh
+            doc.text('consecuentes derivados del uso del Beat. La responsabilidad total del Productor se limitará al', margin, y)
+            y += lh
+            doc.text('importe efectivamente abonado por el Licenciatario por la presente licencia.', margin, y)
+            
+            y += 7
+            doc.setFont('helvetica', 'bold')
+            doc.setFontSize(9)
+            doc.text('9. VIGENCIA Y TERMINACIÓN', margin, y)
+            y += 5.5
+            doc.setFont('helvetica', 'normal')
+            doc.setFontSize(8)
+            doc.text('Esta licencia entrará en vigor en la fecha de adquisición y tendrá duración perpetua mientras el', margin, y)
+            y += lh
+            doc.text('Licenciatario cumpla con todas las obligaciones aquí contenidas. El incumplimiento facultará al', margin, y)
+            y += lh
+            doc.text('Productor a resolver el contrato de forma inmediata, sin perjuicio de las acciones legales oportunas.', margin, y)
+            
+            y += 7
+            doc.setFont('helvetica', 'bold')
+            doc.setFontSize(9)
+            doc.text('10. LEY APLICABLE Y RESOLUCIÓN DE CONFLICTOS', margin, y)
+            y += 5.5
+            doc.setFont('helvetica', 'normal')
+            doc.setFontSize(8)
+            doc.text('El presente contrato se rige por las leyes de España y de la Unión Europea. Para la resolución de', margin, y)
+            y += lh
+            doc.text('cualquier controversia derivada del mismo, las partes se someten expresamente a los Juzgados y', margin, y)
+            y += lh
+            doc.text('Tribunales de Madrid (España), renunciando a cualquier otro fuero que pudiera corresponderles.', margin, y)
+            
+            y += 9
+            doc.setDrawColor(80, 80, 80)
+            doc.setLineWidth(0.4)
+            doc.line(margin, y, pageWidth - margin, y)
+            y += 7
+            
+            doc.setTextColor(197, 162, 111)
+            doc.setFontSize(8.5)
+            doc.setFont('helvetica', 'bold')
+            doc.text('ACEPTACIÓN ELECTRÓNICA Y VALIDEZ JURÍDICA', margin, y)
+            y += 5.5
+            
+            doc.setTextColor(200, 200, 200)
+            doc.setFontSize(7.6)
+            doc.setFont('helvetica', 'normal')
+            doc.text('La adquisición del producto y la descarga de este documento constituyen aceptación expresa,', margin, y)
+            y += lh
+            doc.text('voluntaria e irrevocable de todos los términos y condiciones del presente contrato. Esta aceptación', margin, y)
+            y += lh
+            doc.text('electrónica tiene plena validez jurídica como firma digital conforme al Reglamento (UE) nº 910/2014', margin, y)
+            y += lh
+            doc.text('(eIDAS) y la legislación española aplicable.', margin, y)
+            
+            y += 7
+            doc.setTextColor(170, 170, 170)
+            doc.setFontSize(7.5)
+            doc.text(`Fecha de aceptación: ${purchaseDate}`, margin, y)
+            y += 4.5
+            doc.text(`Identificador único de licencia: ${licenseId}`, margin, y)
+            
+            doc.setDrawColor(60, 60, 60)
+            doc.line(margin, 265, pageWidth - margin, 265)
+            
+            doc.setTextColor(100, 100, 100)
+            doc.setFontSize(6.5)
+            doc.text('Focking Dandyel © 2026 — Todos los derechos reservados. Este documento es prueba fehaciente de la licencia concedida.', pageWidth / 2, 271, { align: 'center' })
+            doc.text('Se recomienda conservar una copia en lugar seguro. Para consultas: contacto@fockingdandyel.com', pageWidth / 2, 276, { align: 'center' })
+            
+            doc.setTextColor(90, 90, 90)
+            doc.setFontSize(7)
+            doc.text('Focking Dandyel • Contrato de Licencia Oficial • Página 2 de 2', pageWidth / 2, 288, { align: 'center' })
+            
+            const fileName = `Licencia_Focking_Dandyel_${beat.title.replace(/\s+/g, '_')}_2026.pdf`
+            doc.save(fileName)
+        }
+
+        function downloadLicenseFromSuccess() {
+            if (!currentSuccessBeatId) return
+            const beat = beats.find(b => b.id === currentSuccessBeatId)
+            if (!beat) return
+            
+            generateProfessionalLicensePDF(beat)
+            
+            setTimeout(() => {
+                showMotivationalToast('download', beat.title + ' (Licencia PDF)')
+            }, 600)
+        }
+
+        function showPurchasedMessage(beatId) {
+            const beat = beats.find(b => b.id === beatId)
+            if (!beat) return
+
+            const toastContainer = document.getElementById('toast-container')
+            const msg = document.createElement('div')
+            msg.className = `toast max-w-[320px] bg-zinc-900 border border-emerald-700 shadow-2xl rounded-3xl p-4 text-sm`
+            msg.innerHTML = `
+                <div class="flex gap-x-3">
+                    <div class="mt-0.5"><i class="fa-solid fa-folder-open text-emerald-400 text-xl"></i></div>
+                    <div class="flex-1">
+                        <div class="font-semibold text-emerald-300">Este beat ya está en tu biblioteca</div>
+                        <div class="text-xs text-zinc-400 mt-1">Puedes volver a descargarlo cuando quieras desde <strong>Mis compras</strong>.</div>
+                        
+                        <button onclick="showCart(); document.querySelectorAll('.fixed').forEach(el => el.remove())" 
+                                class="mt-3 w-full py-2 text-xs font-semibold bg-emerald-600 hover:bg-emerald-500 transition-colors text-white rounded-2xl">
+                            IR A MIS COMPRAS
+                        </button>
+                    </div>
+                </div>
+            `
+            toastContainer.appendChild(msg)
+            setTimeout(() => msg.remove(), 5500)
+        }
+
+        function showMotivationalToast(type, beatTitle) {
+            const container = document.getElementById('toast-container')
+            let message = ''
+            let icon = ''
+            let accent = 'purple'
+            
+            if (type === 'buy') {
+                icon = 'fa-credit-card'
+                accent = 'emerald'
+                message = `¡Inversión inteligente! Acabas de dar un paso enorme hacia tu próximo hit. Este beat + tu talento = química imparable.`
+            } else if (type === 'download') {
+                icon = 'fa-download'
+                accent = 'pink'
+                message = `¡Descarga completada! El beat y la licencia oficial ya son tuyos. Ahora haz que cobre vida.`
+            }
+            
+            const toastId = 'toast-' + Date.now()
+            const toastHTML = `
+                <div id="${toastId}" class="toast max-w-[300px] bg-zinc-900 border border-zinc-700 shadow-2xl rounded-3xl overflow-hidden">
+                    <div class="px-4 pt-4 pb-3 flex gap-x-3">
+                        <div class="flex-shrink-0 mt-0.5">
+                            <div class="w-9 h-9 rounded-2xl bg-${accent}-500/10 flex items-center justify-center">
+                                <i class="fa-solid ${icon} text-${accent}-400 text-xl"></i>
+                            </div>
+                        </div>
+                        <div class="flex-1 pr-1">
+                            <div class="font-semibold text-sm leading-tight">${message}</div>
+                            <div class="text-[10px] text-zinc-400 mt-2 font-medium">FOCKING DANDYEL • 2026</div>
+                        </div>
+                    </div>
+                    <div class="h-0.5 bg-gradient-to-r from-${accent}-500 to-transparent w-full"></div>
+                </div>
+            `
+            
+            container.insertAdjacentHTML('beforeend', toastHTML)
+            setTimeout(() => {
+                const el = document.getElementById(toastId)
+                if (el) {
+                    el.style.transition = 'all 0.25s ease'
+                    el.style.opacity = '0'
+                    setTimeout(() => el.remove(), 200)
+                }
+            }, 5200)
+        }
+
+        function buyPack(packId) {
+            let linkKey = 'pack5';
+            if (packId === 2) linkKey = 'pack8';
+            if (packId === 3) linkKey = 'pack12';
+
+            const url = stripeLinks[linkKey];
+
+            if (url && url.startsWith('http')) {
+                const link = document.createElement('a');
+                link.href = url;
+                link.target = '_blank';
+                link.rel = 'noopener noreferrer';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            } else {
+                alert("Por favor configura los links de Stripe para los packs en stripeLinks");
+            }
+        }
+
+        function showPackSuccessModal(receivedBeats, packId) {
+            const modal = document.createElement('div');
+            modal.className = `fixed inset-0 bg-black/90 flex items-end md:items-center justify-center z-[95]`;
+
+            let packName = "Pack 5 Beats";
+            if (packId === 2) packName = "Pack 8 Beats";
+            if (packId === 3) packName = "Pack 12 Beats";
+
+            let html = `
+                <div onclick="event.target.remove()" class="absolute inset-0"></div>
+                <div onclick="event.stopImmediatePropagation()" class="modal relative bg-zinc-950 w-full md:w-[520px] md:rounded-3xl md:m-4 rounded-t-3xl border border-emerald-500/40 max-h-[85vh] flex flex-col">
+                    
+                    <!-- Header -->
+                    <div class="px-8 pt-8 pb-4 text-center border-b border-zinc-800">
+                        <div class="mx-auto w-20 h-20 bg-emerald-500 rounded-full flex items-center justify-center mb-5">
+                            <i class="fa-solid fa-gift text-white text-4xl"></i>
+                        </div>
+                        <div class="font-bold text-3xl tracking-tight">¡Pack adquirido!</div>
+                        <div class="text-emerald-400 text-xl mt-1 font-semibold">${packName}</div>
+                        <div class="text-sm text-zinc-400 mt-2">Recibiste ${receivedBeats.length} beats premium aleatorios</div>
+                    </div>
+
+                    <!-- Beats List -->
+                    <div class="flex-1 overflow-auto p-6 space-y-3">
+            `;
+
+            receivedBeats.forEach(beat => {
+                html += `
+                    <div class="bg-zinc-900 border border-zinc-700 rounded-2xl p-4">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <div class="font-semibold">${beat.title}</div>
+                                <div class="text-xs text-purple-300">${beat.genre} • ${beat.bpm} BPM • ${beat.key}</div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex gap-2 mt-4">
+                            <button onclick="downloadBeatFromPack(${beat.id}, this)" 
+                                    class="flex-1 py-2.5 text-sm font-medium bg-zinc-800 hover:bg-zinc-700 transition-colors rounded-2xl flex items-center justify-center gap-x-2">
+                                <i class="fa-solid fa-download"></i>
+                                <span>Instrumental</span>
+                            </button>
+                            
+                            <button onclick="downloadLicenseFromPack(${beat.id}, this)" 
+                                    class="flex-1 py-2.5 text-sm font-medium bg-gradient-to-r from-[#C5A26F] to-[#E8D5A3] text-black hover:brightness-105 transition-all rounded-2xl flex items-center justify-center gap-x-2">
+                                <i class="fa-solid fa-file-pdf"></i>
+                                <span>Licencia PDF</span>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+
+            html += `
+                    </div>
+
+                    <div class="p-6 border-t border-zinc-800">
+                        <button onclick="this.closest('.fixed').remove()" 
+                                class="w-full py-4 bg-white text-zinc-950 font-bold rounded-3xl text-base transition-all active:scale-[0.985]">
+                            Cerrar
+                        </button>
+                        <div class="text-center text-[10px] text-zinc-500 mt-3">Cada beat incluye su licencia oficial individual</div>
+                    </div>
+                </div>
+            `;
+
+            modal.innerHTML = html;
+            document.body.appendChild(modal);
+        }
+
+        function downloadBeatFromPack(beatId, buttonElement) {
+            const beat = beats.find(b => b.id === beatId);
+            if (!beat) return;
+
+            const link = document.createElement('a');
+            link.href = beat.audioUrl;
+            link.download = `Focking_Dandyel_${beat.title.replace(/\s+/g, '_')}.mp3`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
+            // Visual feedback
+            const originalText = buttonElement.innerHTML;
+            buttonElement.innerHTML = `<i class="fa-solid fa-check"></i> <span>Descargado</span>`;
+            buttonElement.disabled = true;
+            
+            setTimeout(() => {
+                if (buttonElement && buttonElement.parentNode) {
+                    buttonElement.innerHTML = originalText;
+                    buttonElement.disabled = false;
+                }
+            }, 1800);
+        }
+
+        function downloadLicenseFromPack(beatId, buttonElement) {
+            const beat = beats.find(b => b.id === beatId);
+            if (!beat) return;
+
+            generateProfessionalLicensePDF(beat);
+
+            // Visual feedback
+            const originalText = buttonElement.innerHTML;
+            buttonElement.innerHTML = `<i class="fa-solid fa-check"></i> <span>Generado</span>`;
+            buttonElement.disabled = true;
+
+            setTimeout(() => {
+                if (buttonElement && buttonElement.parentNode) {
+                    buttonElement.innerHTML = originalText;
+                    buttonElement.disabled = false;
+                }
+            }, 2200);
+        }
+
+        function showCart() {
+            const modal = document.createElement('div')
+            modal.className = `fixed inset-0 bg-black/80 flex items-end md:items-center justify-center z-[85]`
+            
+            const purchasedList = beats.filter(b => purchasedBeats.has(b.id))
+            
+            let html = `
+                <div onclick="event.target.remove()" class="absolute inset-0"></div>
+                <div onclick="event.stopImmediatePropagation()" class="modal relative bg-zinc-900 w-full md:w-[460px] md:rounded-3xl md:m-4 rounded-t-3xl border border-zinc-700 max-h-[75vh] flex flex-col">
+                    <div class="px-6 pt-5 pb-3 flex items-center justify-between border-b border-zinc-700">
+                        <div class="font-bold text-xl">Mis compras</div>
+                        <div onclick="this.closest('.fixed').remove()" class="cursor-pointer text-3xl leading-none text-zinc-400 hover:text-white">&times;</div>
+                    </div>
+                    
+                    <div class="flex-1 overflow-auto p-6 space-y-4">
+            `
+            
+            if (purchasedList.length === 0) {
+                html += `
+                    <div class="text-center py-8">
+                        <i class="fa-solid fa-record-vinyl text-6xl text-zinc-700 mb-4"></i>
+                        <div class="font-medium">Aún no tienes beats comprados</div>
+                        <div class="text-xs text-zinc-400 mt-1">Explora el catálogo y encuentra tu próximo sonido signature.</div>
+                    </div>
+                `
+            } else {
+                purchasedList.forEach(beat => {
+                    html += `
+                        <div class="flex gap-x-4 bg-zinc-800 rounded-2xl p-3">
+                            <div class="w-14 h-14 flex-shrink-0 rounded-xl overflow-hidden">
+                                <img src="${beat.cover}" class="w-full h-full object-cover">
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <div class="font-semibold leading-tight">${beat.title}</div>
+                                <div class="text-xs text-purple-300">${beat.genre} • ${beat.bpm} BPM</div>
+                                
+                                <div class="mt-2 flex items-center gap-x-2">
+                                    <button onclick="downloadBeatFromCart(${beat.id}); event.target.closest('.fixed').remove()" 
+                                            class="text-xs flex items-center gap-x-1 px-3 py-1 bg-purple-600 hover:bg-purple-500 transition-colors text-white rounded-2xl">
+                                        <i class="fa-solid fa-download text-xs"></i>
+                                        <span class="font-medium">Descargar Instrumental</span>
+                                    </button>
+                                    
+                                    <button onclick="generateProfessionalLicensePDFFromCart(${beat.id}); event.target.closest('.fixed').remove()" 
+                                            class="text-xs flex items-center gap-x-1 px-3 py-1 border border-zinc-600 hover:bg-zinc-700 transition-colors rounded-2xl">
+                                        <i class="fa-solid fa-file-pdf text-xs"></i>
+                                        <span class="font-medium">Licencia PDF</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    `
+                })
+            }
+            
+            html += `</div></div>`
+            modal.innerHTML = html
+            document.body.appendChild(modal)
+        }
+
+        function downloadBeatFromCart(beatId) {
+            const beat = beats.find(b => b.id === beatId)
+            if (!beat) return
+            const link = document.createElement('a')
+            link.href = beat.audioUrl
+            link.download = `Focking_Dandyel_${beat.title.replace(/\s+/g, '_')}.mp3`
+            document.body.appendChild(link)
+            link.click()
+            document.body.removeChild(link)
+        }
+
+        function generateProfessionalLicensePDFFromCart(beatId) {
+            const beat = beats.find(b => b.id === beatId)
+            if (!beat) return
+            generateProfessionalLicensePDF(beat)
+        }
+
+        function toggleMobileMenu() {
+            const nav = document.createElement('div')
+            nav.className = `fixed inset-0 bg-black/90 z-[95] md:hidden`
+            nav.innerHTML = `
+                <div class="bg-zinc-900 w-3/4 h-full p-6">
+                    <div class="flex justify-between mb-8">
+                        <div class="flex items-center gap-x-3">
+                            <div class="w-8 h-8 bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center">
+                                <span class="font-black text-white">FD</span>
+                            </div>
+                            <span class="font-bold">FOCKING DANDYEL</span>
+                        </div>
+                        <button onclick="this.closest('.fixed').remove()" class="text-3xl">&times;</button>
+                    </div>
+                    
+                    <div class="space-y-1 text-lg">
+                        <a href="#catalogo" onclick="this.closest('.fixed').remove()" class="block py-3 px-4 hover:bg-zinc-800 rounded-2xl">Catálogo de beats</a>
+                        <a href="#por-que" onclick="this.closest('.fixed').remove()" class="block py-3 px-4 hover:bg-zinc-800 rounded-2xl">Por qué nosotros</a>
+                        <a href="#packs" onclick="this.closest('.fixed').remove()" class="block py-3 px-4 hover:bg-zinc-800 rounded-2xl">Packs y ofertas</a>
+                        
+                        <div class="h-px bg-zinc-700 my-4"></div>
+                        
+                        <div onclick="showCart(); this.closest('.fixed').remove()" class="flex items-center gap-x-3 py-3 px-4 hover:bg-zinc-800 rounded-2xl cursor-pointer">
+                            <i class="fa-solid fa-shopping-bag w-5"></i> 
+                            <span>Mis compras</span>
+                        </div>
+                    </div>
+                </div>
+            `
+            document.body.appendChild(nav)
+        }
+
+        function initializeApp() {
+            initializeTailwind()
+            loadPurchased()
+            renderBeats()
+            updateCartCount()
+            
+            document.addEventListener('keydown', function(e) {
+                if (e.key === '/' && document.activeElement.tagName === 'BODY') {
+                    e.preventDefault()
+                    document.getElementById('search-input').focus()
+                }
+                if (e.key === ' ' && currentBeatId) {
+                    e.preventDefault()
+                    togglePlayPause()
+                }
+                if (e.key === 'Escape') {
+                    const modals = document.querySelectorAll('.fixed.inset-0')
+                    if (modals.length > 0) modals[modals.length - 1].remove()
+                }
+            })
+            
+            if (!localStorage.getItem('fockingDandyelVisited')) {
+                setTimeout(() => {
+                    const container = document.getElementById('toast-container')
+                    const welcome = document.createElement('div')
+                    welcome.className = `toast max-w-[280px] bg-zinc-900 border border-purple-700/60 rounded-3xl p-4 text-xs`
+                    welcome.innerHTML = `
+                        <div class="flex gap-3">
+                            <div class="text-purple-400"><i class="fa-solid fa-rocket text-xl"></i></div>
+                            <div>
+                                <div class="font-semibold">Bienvenido a la nueva era.</div>
+                                <div class="text-zinc-300 mt-px">Cada compra incluye el instrumental + PDF profesional de licencia oficial 2026.</div>
+                            </div>
+                        </div>
+                    `
+                    container.appendChild(welcome)
+                    localStorage.setItem('fockingDandyelVisited', 'true')
+                    setTimeout(() => welcome.remove(), 6200)
+                }, 4200)
+            }
+
+            // Detectar si vienen de Stripe después de un pago exitoso (?payment=success)
+            checkPaymentSuccessFromStripe()
+        }
+
+        // Detecta el parámetro payment=success en la URL
+        function checkPaymentSuccessFromStripe() {
+            const urlParams = new URLSearchParams(window.location.search)
+            
+            if (urlParams.get('payment') === 'success') {
+                setTimeout(() => {
+                    const modal = document.createElement('div')
+                    modal.className = `fixed inset-0 bg-black/90 flex items-end md:items-center justify-center z-[90]`
+                    
+                    modal.innerHTML = `
+                        <div onclick="event.target.remove()" class="absolute inset-0"></div>
+                        <div onclick="event.stopImmediatePropagation()" class="modal relative bg-zinc-950 w-full md:w-[480px] md:rounded-3xl md:m-4 rounded-t-3xl border border-emerald-500/40 overflow-hidden shadow-2xl">
+                            
+                            <div class="px-8 pt-8 pb-6 text-center">
+                                <div class="mx-auto w-20 h-20 bg-emerald-500 rounded-full flex items-center justify-center mb-6">
+                                    <i class="fa-solid fa-check-double text-white text-4xl"></i>
+                                </div>
+                                
+                                <div class="font-bold text-3xl tracking-tight">¡Pago completado!</div>
+                                <div class="text-emerald-400 text-xl mt-2 font-semibold">Gracias por tu compra</div>
+                                <div class="text-sm text-zinc-400 mt-3 max-w-xs mx-auto">
+                                    Tu compra ha sido procesada correctamente.<br>
+                                    Ve a <strong>Mis compras</strong> para descargar tus instrumentales y licencias oficiales.
+                                </div>
+                            </div>
+
+                            <div class="px-8 pb-8 flex flex-col gap-3">
+                                <button onclick="showCart(); this.closest('.fixed').remove()" 
+                                        class="w-full py-4 bg-white text-zinc-950 font-bold rounded-3xl text-base transition-all active:scale-[0.985]">
+                                    IR A MIS COMPRAS
+                                </button>
+                                
+                                <button onclick="this.closest('.fixed').remove()" 
+                                        class="w-full py-3 text-sm text-zinc-400 hover:text-white transition-colors">
+                                    Cerrar
+                                </button>
+                            </div>
+                        </div>
+                    `
+                    document.body.appendChild(modal)
+                    
+                    // Limpiamos el parámetro de la URL
+                    window.history.replaceState({}, document.title, window.location.pathname)
+                }, 900)
+            }
+        }
+
+        window.onload = initializeApp
+    </script>
+</body>
+</html>
